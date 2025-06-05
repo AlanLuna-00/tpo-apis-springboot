@@ -1,4 +1,4 @@
-package uade.apis.backend.config;
+package uade.apis.backend.shared;
 
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.*;
@@ -7,7 +7,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import uade.apis.backend.config.exceptions.NotFoundException;
+import uade.apis.backend.shared.exceptions.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.*;

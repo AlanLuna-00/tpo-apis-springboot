@@ -1,9 +1,7 @@
-package uade.apis.backend.users.entity;
+package uade.apis.backend.features.users.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -22,9 +20,7 @@ public class User {
 
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles")
     @Enumerated(EnumType.STRING)
-    private Set<UserRole> roles;
+    private UserRole role;
 }
 

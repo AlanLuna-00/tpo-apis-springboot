@@ -1,13 +1,13 @@
-package uade.apis.backend.products.service;
+package uade.apis.backend.features.products.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import uade.apis.backend.config.exceptions.NotFoundException;
-import uade.apis.backend.products.dto.CreateProductDTO;
-import uade.apis.backend.products.dto.UpdateProductDTO;
-import uade.apis.backend.products.entity.Product;
-import uade.apis.backend.products.repository.ProductRepository;
+import uade.apis.backend.shared.exceptions.NotFoundException;
+import uade.apis.backend.features.products.dto.CreateProductDTO;
+import uade.apis.backend.features.products.dto.UpdateProductDTO;
+import uade.apis.backend.features.products.entity.Product;
+import uade.apis.backend.features.products.repository.ProductRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -17,12 +17,12 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     public Page<Product> getAll(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
-        return productRepository.findByDeletedFalse(pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        return this.productRepository.findByDeletedFalse(pageable);
     }
 
     public Product getById(Long id) {
-        return productRepository.findById(id)
+        return this.productRepository.findById(id)
             .filter(p -> !p.isDeleted())
             .orElseThrow(() -> new NotFoundException("Producto no encontrado"));
     }
@@ -37,11 +37,11 @@ public class ProductService {
             .deleted(false)
             .build();
 
-        return productRepository.save(product);
+        return this.productRepository.save(product);
     }
 
-    public Product update(Long id, UpdateProductDTO dto) {
-        Product product = getById(id);
+    public void update(Long id, UpdateProductDTO dto) {
+        Product product = this.getById(id);
 
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
@@ -49,13 +49,13 @@ public class ProductService {
         product.setStock(dto.getStock());
         product.setImage(dto.getImage());
 
-        return productRepository.save(product);
+        this.productRepository.save(product);
     }
 
     public void delete(Long id) {
-        Product product = getById(id);
+        Product product = this.getById(id);
         product.setDeleted(true);
-        productRepository.save(product);
+        this.productRepository.save(product);
     }
 }
 

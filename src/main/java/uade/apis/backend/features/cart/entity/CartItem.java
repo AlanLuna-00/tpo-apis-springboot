@@ -1,9 +1,9 @@
-package uade.apis.backend.cart.entity;
+package uade.apis.backend.features.cart.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import uade.apis.backend.products.entity.Product;
-import uade.apis.backend.users.entity.User;
+import uade.apis.backend.features.products.entity.Product;
+import uade.apis.backend.features.users.entity.User;
 
 @Entity
 @Table(name = "cart_items")
@@ -19,9 +19,11 @@ public class CartItem {
     private Long id;
 
     @ManyToOne(optional = false)
-    private User user;
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     private Integer quantity;

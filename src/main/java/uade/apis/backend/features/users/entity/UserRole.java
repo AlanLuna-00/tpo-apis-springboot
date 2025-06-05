@@ -1,4 +1,4 @@
-package uade.apis.backend.users.entity;
+package uade.apis.backend.features.users.entity;
 
 public enum UserRole {
     USER,

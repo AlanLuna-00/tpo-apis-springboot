@@ -1,4 +1,4 @@
-package uade.apis.backend.products.dto;
+package uade.apis.backend.features.products.dto;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
