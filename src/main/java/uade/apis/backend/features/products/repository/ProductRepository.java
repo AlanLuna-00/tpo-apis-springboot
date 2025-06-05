@@ -1,7 +1,7 @@
-package uade.apis.backend.products.repository;
+package uade.apis.backend.features.products.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import uade.apis.backend.products.entity.Product;
+import uade.apis.backend.features.products.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

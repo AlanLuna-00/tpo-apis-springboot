@@ -1,7 +1,7 @@
-package uade.apis.backend.users.repository;
+package uade.apis.backend.features.users.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import uade.apis.backend.users.entity.User;
+import uade.apis.backend.features.users.entity.User;
 
 import java.util.Optional;
 

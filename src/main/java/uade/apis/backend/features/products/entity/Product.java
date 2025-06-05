@@ -1,4 +1,4 @@
-package uade.apis.backend.products.entity;
+package uade.apis.backend.features.products.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
