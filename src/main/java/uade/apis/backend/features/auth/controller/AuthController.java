@@ -16,7 +16,7 @@ import uade.apis.backend.features.users.service.UserService;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -55,18 +55,17 @@ public class AuthController {
 
     @GetMapping("/me")
     public ResponseEntity<?> me() {
-            var authentication = SecurityContextHolder.getContext().getAuthentication();
-            String email = (String) authentication.getPrincipal();
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = (String) authentication.getPrincipal();
 
-            User user = userService.findByEmail(email);
+        User user = userService.findByEmail(email);
 
-            return ResponseEntity.ok(Map.of(
-                "id", user.getId(),
-                "email", user.getEmail(),
-                "role", user.getRole()
-            ));
+        return ResponseEntity.ok(Map.of(
+            "id", user.getId(),
+            "email", user.getEmail(),
+            "role", user.getRole()
+        ));
     }
-
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody @Valid RegisterDTO request) {

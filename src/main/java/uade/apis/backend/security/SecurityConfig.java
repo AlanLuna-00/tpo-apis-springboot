@@ -30,12 +30,22 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/login", "/auth/register").permitAll()
-                .requestMatchers("/auth/me", "/auth/logout").authenticated()
-                .requestMatchers(HttpMethod.GET, "/products/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/products").hasRole(UserRole.ADMIN.name())
-                .requestMatchers(HttpMethod.PUT, "/products/**").hasRole(UserRole.ADMIN.name())
-                .requestMatchers(HttpMethod.DELETE, "/products/**").hasRole(UserRole.ADMIN.name())
+                // Endpoints públicos
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                
+                // Endpoints para administradores
+                .requestMatchers("/api/admin/**").hasRole(UserRole.ADMIN.name())
+                
+                // Endpoints para usuarios autenticados
+                .requestMatchers(HttpMethod.POST, "/api/products").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/products/**").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/products/**").authenticated()
+                
+                // Endpoints de autenticación
+                .requestMatchers("/api/auth/me", "/api/auth/logout").authenticated()
+                
+                // Cualquier otra petición requiere autenticación
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
