@@ -13,16 +13,33 @@ public class ProductResponseDTO {
     private Double price;
     private Integer stock;
     private String image;
+    private CategoryDTO category;
+
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CategoryDTO {
+        private Long id;
+        private String name;
+    }
 
     public static ProductResponseDTO from(Product product) {
-        return ProductResponseDTO.builder()
-            .id(product.getId())
-            .name(product.getName())
-            .description(product.getDescription())
-            .price(product.getPrice())
-            .stock(product.getStock())
-            .image(product.getImage())
-            .build();
+        ProductResponseDTO dto = new ProductResponseDTO();
+        dto.setId(product.getId());
+        dto.setName(product.getName());
+        dto.setDescription(product.getDescription());
+        dto.setPrice(product.getPrice());
+        dto.setStock(product.getStock());
+        dto.setImage(product.getImage());
+        
+        if (product.getCategory() != null) {
+            dto.setCategory(new CategoryDTO(
+                product.getCategory().getId(),
+                product.getCategory().getName()
+            ));
+        }
+        
+        return dto;
     }
 }
 

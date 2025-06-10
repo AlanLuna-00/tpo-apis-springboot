@@ -18,4 +18,7 @@ public class CreateProductDTO {
     private Integer stock;
 
     private String image;
+
+    @NotNull
+    private Long categoryId;
 }

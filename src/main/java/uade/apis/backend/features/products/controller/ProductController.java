@@ -26,26 +26,30 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<PageResponse<ProductResponseDTO>> getAll(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Page<Product> result = productService.getAll(page, size);
-        List<ProductResponseDTO> items = result
-            .getContent()
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) Long categoryId) {
+        
+        Page<Product> products;
+        if (categoryId != null) {
+            products = productService.getByCategory(categoryId, page, size);
+        } else {
+            products = productService.getAll(page, size);
+        }
+        
+        List<ProductResponseDTO> items = products.getContent()
             .stream()
             .map(ProductResponseDTO::from)
             .toList();
 
-        PageResponse<ProductResponseDTO> response = new PageResponse<>(
+        return ResponseEntity.ok(new PageResponse<>(
             items,
             new PageResponse.Meta(
-                result.getNumber(),
-                result.getSize(),
-                result.getTotalElements(),
-                result.getTotalPages()
+                products.getNumber(),
+                products.getSize(),
+                products.getTotalElements(),
+                products.getTotalPages()
             )
-        );
-
-        return ResponseEntity.ok(response);
+        ));
     }
 
     @GetMapping("/{id}")
@@ -60,11 +64,13 @@ public class ProductController {
         URI location = URI.create("/products/" + saved.getId());
         return ResponseEntity.created(location).build();
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid UpdateProductDTO dto) {
         productService.update(id, dto);
         return ResponseEntity.noContent().build();
     }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         productService.delete(id);

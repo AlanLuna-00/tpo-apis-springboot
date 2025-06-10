@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import uade.apis.backend.features.category.entity.Category;
+import uade.apis.backend.features.category.repository.CategoryRepository;
 import uade.apis.backend.features.products.entity.Product;
 import uade.apis.backend.features.products.repository.ProductRepository;
 import uade.apis.backend.features.users.entity.User;
@@ -24,10 +26,12 @@ public class DataInitializer {
     private final UserRepository userRepository;
     private final ProductRepository productRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CategoryRepository categoryRepository;
 
     @PostConstruct
     public void init() {
         createUsers();
+        createCategories();
         createProducts();
     }
 
@@ -51,8 +55,40 @@ public class DataInitializer {
         }
     }
 
+    private void createCategories() {
+        if (categoryRepository.count() == 0) {
+            List<Category> categories = List.of(
+                Category.builder()
+                    .name("Calzado")
+                    .description("Zapatillas, zapatos y calzado deportivo")
+                    .active(true)
+                    .build(),
+                Category.builder()
+                    .name("Indumentaria")
+                    .description("Ropa deportiva y casual")
+                    .active(true)
+                    .build(),
+                Category.builder()
+                    .name("Accesorios")
+                    .description("Mochilas, bolsos y accesorios varios")
+                    .active(true)
+                    .build()
+            );
+
+            categoryRepository.saveAll(categories);
+            log.info("✅ Categorías de ejemplo creadas");
+        }
+    }
+
     private void createProducts() {
         if (productRepository.count() == 0) {
+            Category calzado = categoryRepository.findByName("Calzado")
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            Category indumentaria = categoryRepository.findByName("Indumentaria")
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            Category accesorios = categoryRepository.findByName("Accesorios")
+                .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+
             List<Product> sampleProducts = List.of(
                 Product.builder()
                     .name("Zapatilla Running")
@@ -60,6 +96,7 @@ public class DataInitializer {
                     .price(12999.99)
                     .stock(25)
                     .image("https://via.placeholder.com/150")
+                    .category(calzado)
                     .deleted(false)
                     .build(),
                 Product.builder()
@@ -68,6 +105,7 @@ public class DataInitializer {
                     .price(21999.00)
                     .stock(15)
                     .image("https://via.placeholder.com/150")
+                    .category(indumentaria)
                     .deleted(false)
                     .build(),
                 Product.builder()
@@ -76,6 +114,7 @@ public class DataInitializer {
                     .price(8999.50)
                     .stock(30)
                     .image("https://via.placeholder.com/150")
+                    .category(accesorios)
                     .deleted(false)
                     .build()
             );
