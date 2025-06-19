@@ -9,7 +9,7 @@ import uade.apis.backend.features.category.service.CategoryService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/categories")
 @CrossOrigin(origins = "*")
 public class CategoryController {
 
