@@ -23,7 +23,7 @@ public class AuthService {
 
     public String login(LoginDTO request) {
         User user = userRepository.findByEmail(request.getEmail())
-            .orElseThrow(() -> new BadCredentialsException("Email o contraseña incorrectos"));
+                .orElseThrow(() -> new BadCredentialsException("Email o contraseña incorrectos"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new BadCredentialsException("Email o contraseña incorrectos");
@@ -38,12 +38,15 @@ public class AuthService {
         }
 
         User user = User.builder()
-            .email(request.getEmail())
-            .password(passwordEncoder.encode(request.getPassword()))
-            .role(UserRole.USER)
-            .build();
+                .email(request.getEmail())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(UserRole.USER)
+                .build();
 
         return userRepository.save(user);
     }
-}
 
+    public String generateTokenForUser(User user) {
+        return jwtTokenProvider.generateToken(user);
+    }
+}

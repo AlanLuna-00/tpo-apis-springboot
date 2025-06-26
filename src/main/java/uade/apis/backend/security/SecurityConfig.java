@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 import uade.apis.backend.features.users.entity.UserRole;
 
 @Configuration
@@ -18,6 +19,7 @@ import uade.apis.backend.features.users.entity.UserRole;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -27,6 +29,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource))
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
@@ -40,11 +43,9 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/categories").hasRole(UserRole.ADMIN.name())
                 .requestMatchers(HttpMethod.PUT, "/categories/**").hasRole(UserRole.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/categories/**").hasRole(UserRole.ADMIN.name())
-                .anyRequest().authenticated()
-            )
+                        .anyRequest().authenticated())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .build();
     }
-
 
 }
